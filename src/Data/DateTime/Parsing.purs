@@ -10,6 +10,7 @@ import Prelude
 import Data.Array as Array
 import Data.DateTime as DT
 import Data.Enum (toEnum)
+import Data.Enum as E
 import Data.Foldable as F
 import Data.Int (floor)
 import Data.List.Types (toList)
@@ -53,22 +54,20 @@ parseDigits n = do
 maybeFail :: forall s m a. Monad m => String -> Maybe a -> P.ParserT s m a
 maybeFail str = maybe (P.fail str) pure
 
+parseDateTimeSegment :: forall m a. Monad m => E.BoundedEnum a => String -> Int -> P.ParserT String m a
+parseDateTimeSegment errorMessage n = do
+  digits <- parseDigits n
+  maybeFail errorMessage $ toEnum digits
 
 -- Date parsers
 parseYear :: forall m. Monad m => P.ParserT String m DT.Year
-parseYear = do
-  digits <- parseDigits 4
-  maybeFail "bad year" $ toEnum digits
+parseYear = parseDateTimeSegment "bad year" 4
 
 parseMonth :: forall m. Monad m => P.ParserT String m DT.Month
-parseMonth = do
-  digits <- parseDigits 2
-  maybeFail "bad month" $ toEnum digits
+parseMonth = parseDateTimeSegment "bad month" 2
 
 parseDay :: forall m. Monad m => P.ParserT String m DT.Day
-parseDay = do
-  digits <- parseDigits 2
-  maybeFail "bad day" $ toEnum digits
+parseDay = parseDateTimeSegment "bad day" 2
 
 parseDate :: forall m. Monad m => P.ParserT String m DT.Date
 parseDate = do
@@ -82,19 +81,13 @@ parseDate = do
 
 -- Time parsers
 parseHour :: forall m. Monad m => P.ParserT String m DT.Hour
-parseHour = do
-  digits <- parseDigits 2
-  maybeFail "bad hour" $ toEnum digits
+parseHour = parseDateTimeSegment "bad hour" 2
 
 parseMinute :: forall m. Monad m => P.ParserT String m DT.Minute
-parseMinute = do
-  digits <- parseDigits 2
-  maybeFail "bad minute" $ toEnum digits
+parseMinute = parseDateTimeSegment "bad minute" 2
 
 parseSecond :: forall m. Monad m => P.ParserT String m DT.Second
-parseSecond = do
-  digits <- parseDigits 2
-  maybeFail "bad second" $ toEnum digits
+parseSecond = parseDateTimeSegment "bad second" 2
 
 -- RFC3339 does not specify a maximum number of digits for the second fraction
 -- portion. Even though Time can only offer precision to a millisecond, there is
