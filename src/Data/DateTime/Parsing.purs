@@ -96,25 +96,20 @@ parseSecond = do
   digits <- parseDigits 2
   maybeFail "bad second" $ toEnum digits
 
--- Sadly since RFC3339 does not have a set length for the secfrac field
--- I have to write this ugly function to handle whatever length it can be.
---
--- TODO: Make sure number of milliseconds actually matches the number given.
--- Example .1 will become just 1 when coverted from digits to an int, but
--- it should represent 100 milliseconds.
+-- RFC3339 does not specify a maximum number of digits for the second fraction
+-- portion. Even though Time can only offer precision to a millisecond, there is
+-- still a need to handle any extra digits that could possibly show up and ignore
+-- them.
 parseSecondFraction :: forall m. Monad m => P.ParserT String m DT.Millisecond
 parseSecondFraction = do
   _ <- PS.char '.'
   digits <- PC.many1 PT.digit
-  let arrayOfDigits = Array.take 3 <<< F.foldMap (Array.singleton) <<< toList $ digits
+  let arrayOfDigits = Array.concat <<< (\x -> [['0', '.'], x]) <<< Array.take 3 <<< F.foldMap (Array.singleton) <<< toList $ digits
       maybeN = fromString <<< fromCharArray $ arrayOfDigits
-      multiplyN n | n < 10 = n * 100
-                  | n < 100 = n * 10
-                  | otherwise = n
       millisecond :: Maybe DT.Millisecond
       millisecond = do
          n <- maybeN
-         toEnum <<< multiplyN <<< floor $ n
+         toEnum <<< floor $ n * 1000.0
   maybeFail "bad millisecond" $ millisecond
 
 parsePartialTime :: forall m. Monad m => P.ParserT String m DT.Time
