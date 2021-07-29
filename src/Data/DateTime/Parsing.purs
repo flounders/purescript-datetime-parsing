@@ -2,6 +2,7 @@ module
   Data.DateTime.Parsing ( Direction(..)
                         , FullDateTime
                         , Offset(..)
+                        , fromString
                         , parseFullDateTime
                         ) where
 
@@ -9,13 +10,14 @@ import Prelude
 
 import Data.Array as Array
 import Data.DateTime as DT
+import Data.Either (Either)
 import Data.Enum (toEnum)
 import Data.Enum as E
 import Data.Foldable as F
 import Data.Int (floor)
 import Data.List.Types (toList)
 import Data.Maybe (Maybe, maybe)
-import Data.Number (fromString)
+import Data.Number as N
 import Data.String.CodeUnits (fromCharArray)
 import Data.Traversable (sequence)
 import Text.Parsing.Parser as P
@@ -49,7 +51,7 @@ count n p = sequence $ Array.replicate n p
 parseDigits :: forall m. Monad m => Int -> P.ParserT String m Int
 parseDigits n = do
   digits <- count n PT.digit
-  maybe (P.fail "bad number") (pure <<< floor) <<< fromString <<< fromCharArray $ digits
+  maybe (P.fail "bad number") (pure <<< floor) <<< N.fromString <<< fromCharArray $ digits
 
 maybeFail :: forall s m a. Monad m => String -> Maybe a -> P.ParserT s m a
 maybeFail str = maybe (P.fail str) pure
@@ -98,7 +100,7 @@ parseSecondFraction = do
   _ <- PS.char '.'
   digits <- PC.many1 PT.digit
   let arrayOfDigits = Array.concat <<< (\x -> [['0', '.'], x]) <<< Array.take 3 <<< F.foldMap (Array.singleton) <<< toList $ digits
-      maybeN = fromString <<< fromCharArray $ arrayOfDigits
+      maybeN = N.fromString <<< fromCharArray $ arrayOfDigits
       millisecond :: Maybe DT.Millisecond
       millisecond = do
          n <- maybeN
@@ -150,3 +152,6 @@ parseFullDateTime = do
   time <- parsePartialTime
   offset <- parseOffset
   pure $ FullDateTime (DT.DateTime date time) offset
+
+fromString :: String -> Either P.ParseError FullDateTime
+fromString s = P.runParser s parseFullDateTime
