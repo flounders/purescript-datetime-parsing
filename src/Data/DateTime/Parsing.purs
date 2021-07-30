@@ -4,19 +4,22 @@ module
                         , Offset(..)
                         , fromString
                         , parseFullDateTime
+                        , toUTC
                         ) where
 
 import Prelude
 
 import Data.Array as Array
 import Data.DateTime as DT
+import Data.Time as T
+import Data.Time.Duration as D
 import Data.Either (Either)
 import Data.Enum (toEnum)
 import Data.Enum as E
 import Data.Foldable as F
 import Data.Int (floor)
 import Data.List.Types (toList)
-import Data.Maybe (Maybe, maybe)
+import Data.Maybe (Maybe(..), maybe)
 import Data.Number as N
 import Data.String.CodeUnits (fromCharArray)
 import Data.Traversable (sequence)
@@ -161,3 +164,14 @@ parseFullDateTime = do
 
 fromString :: String -> Either P.ParseError FullDateTime
 fromString s = P.runParser s parseFullDateTime
+
+toUTC :: FullDateTime -> Maybe DT.DateTime
+toUTC (FullDateTime dt Zulu) = pure dt
+toUTC (FullDateTime dt (Offset dir hh mm)) = do
+  offsetTime <- DT.Time <$> pure hh <*> pure mm <*> toEnum 0 <*> toEnum 0
+  zeroTime <- DT.Time <$> toEnum 0 <*> toEnum 0 <*> toEnum 0 <*> toEnum 0
+  let duration :: D.Milliseconds
+      duration = T.diff zeroTime offsetTime
+  case dir of
+      Plus -> DT.adjust duration dt
+      Minus -> DT.adjust (D.negateDuration duration) dt
