@@ -1,6 +1,6 @@
 module
   Data.DateTime.Parsing ( Direction(..)
-                        , FullDateTime
+                        , FullDateTime(..)
                         , Offset(..)
                         , fromString
                         , parseFullDateTime
@@ -32,6 +32,8 @@ instance showOffset :: Show Offset where
   show Zulu = "(Offset Zulu)"
   show (Offset d h m) = "(Offset " <> show d <> " " <> show h <> ":" <> show m <> ")"
 
+derive instance Eq Offset
+
 data Direction = Plus
                | Minus
 
@@ -39,10 +41,14 @@ instance showDirection :: Show Direction where
   show Plus = "+"
   show Minus = "-"
 
+derive instance Eq Direction
+
 data FullDateTime = FullDateTime DT.DateTime Offset
 
 instance showFullDateTime :: Show FullDateTime where
   show (FullDateTime dt offset) = "(FullDateTime " <> show dt <> " " <> show offset <> ")"
+
+derive instance Eq FullDateTime
 
 -- Parser helpers
 count :: forall s m a. Monad m => Int -> P.ParserT s m a -> P.ParserT s m (Array a)

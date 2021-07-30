@@ -5,5 +5,6 @@ in conf // {
   dependencies = conf.dependencies # [ "aff"
                                      , "effect"
                                      , "either"
+                                     , "partial"
                                      , "spec" ]
 }
