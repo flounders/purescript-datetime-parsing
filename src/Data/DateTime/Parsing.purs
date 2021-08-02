@@ -1,9 +1,9 @@
 module
   Data.DateTime.Parsing ( Direction(..)
-                        , FullDateTime(..)
                         , Offset(..)
-                        , fromString
+                        , FullDateTime(..)
                         , parseFullDateTime
+                        , fromString
                         , toUTC
                         ) where
 
@@ -158,6 +158,8 @@ parseNumOffset = do
   minute <- parseMinute
   pure $ Offset direction hour minute
 
+-- | `parseFullDateTime` will parse RFC3339 compliant datetimes. It will not
+-- | handle leap seconds until they are supported in `DateTime`.
 parseFullDateTime :: forall s m. PS.StringLike s => Monad m => P.ParserT s m FullDateTime
 parseFullDateTime = do
   date <- parseDate
@@ -166,9 +168,13 @@ parseFullDateTime = do
   offset <- parseOffset
   pure $ FullDateTime (DT.DateTime date time) offset
 
+-- | This is a convenience function for the simple use case of `String` to a
+-- | `DateTime` or a `ParseError`.
 fromString :: String -> Either P.ParseError FullDateTime
 fromString s = P.runParser s parseFullDateTime
 
+-- | `toUTC` is a convenience function that will take a `FullDateTime` and use
+-- | it's offset to adjust it to a UTC `DateTime`.
 toUTC :: FullDateTime -> Maybe DT.DateTime
 toUTC (FullDateTime dt Zulu) = pure dt
 toUTC (FullDateTime dt (Offset dir hh mm)) = do
