@@ -25,6 +25,8 @@ to generate this file without the comments in this block.
                  , "psci-support"
                  , "strings"
                  , "unicode" ]
+, license = "BSD-3-Clause"
 , packages = ./packages.dhall
+, repository = "https://github.com/flounders/purescript-datetime-parsing"
 , sources = [ "src/**/*.purs" ]
 }
