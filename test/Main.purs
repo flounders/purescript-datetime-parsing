@@ -13,7 +13,7 @@ import Test.Spec (describe, it)
 import Test.Spec.Assertions (fail, shouldEqual)
 import Test.Spec.Reporter.Console (consoleReporter)
 import Test.Spec.Runner (runSpec)
-import Text.Parsing.Parser (ParseError, runParser)
+import Parsing (ParseError, runParser)
 
 import Data.DateTime.Parsing as P
 
