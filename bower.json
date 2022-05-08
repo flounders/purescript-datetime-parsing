@@ -14,19 +14,19 @@
         "output"
     ],
     "dependencies": {
-        "purescript-arrays": "^v6.0.1",
-        "purescript-datetime": "^v5.0.2",
-        "purescript-either": "^v5.0.0",
-        "purescript-enums": "^v5.0.0",
-        "purescript-foldable-traversable": "^v5.0.1",
-        "purescript-integers": "^v5.0.0",
-        "purescript-lists": "^v6.0.1",
-        "purescript-maybe": "^v5.0.0",
-        "purescript-numbers": "^v8.0.0",
-        "purescript-parsing": "^v6.0.2",
-        "purescript-prelude": "^v5.0.1",
-        "purescript-psci-support": "^v5.0.0",
-        "purescript-strings": "^v5.0.0",
-        "purescript-unicode": "^v5.0.0"
+        "purescript-arrays": "^v7.0.0",
+        "purescript-datetime": "^v6.0.0",
+        "purescript-either": "^v6.0.0",
+        "purescript-enums": "^v6.0.0",
+        "purescript-foldable-traversable": "^v6.0.0",
+        "purescript-integers": "^v6.0.0",
+        "purescript-lists": "^v7.0.0",
+        "purescript-maybe": "^v6.0.0",
+        "purescript-numbers": "^v9.0.0",
+        "purescript-parsing": "^v9.0.0",
+        "purescript-prelude": "^v6.0.0",
+        "purescript-psci-support": "^v6.0.0",
+        "purescript-strings": "^v6.0.0",
+        "purescript-unicode": "^v6.0.0"
     }
 }
