@@ -22,7 +22,6 @@ to generate this file without the comments in this block.
                  , "numbers"
                  , "parsing"
                  , "prelude"
-                 , "psci-support"
                  , "strings"
                  , "unicode" ]
 , license = "BSD-3-Clause"
