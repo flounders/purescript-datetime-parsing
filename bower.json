@@ -25,7 +25,6 @@
         "purescript-numbers": "^v9.0.0",
         "purescript-parsing": "^v9.0.0",
         "purescript-prelude": "^v6.0.0",
-        "purescript-psci-support": "^v6.0.0",
         "purescript-strings": "^v6.0.0",
         "purescript-unicode": "^v6.0.0"
     }
