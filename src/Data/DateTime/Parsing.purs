@@ -10,7 +10,6 @@ module
 import Prelude
 
 import Data.Array as Array
-import Data.CodePoint.Unicode (isDecDigit)
 import Data.DateTime as DT
 import Data.Time as T
 import Data.Time.Duration as D
@@ -23,11 +22,11 @@ import Data.List.Types (toList)
 import Data.Maybe (Maybe, maybe)
 import Data.Number as N
 import Data.String.CodeUnits (fromCharArray)
-import Data.String.CodePoints (codePointFromChar)
 import Data.Traversable (sequence)
 import Parsing as P
 import Parsing.Combinators as PC
 import Parsing.String as PS
+import Parsing.String.Basic (digit)
 
 data Offset = Zulu
             | Offset Direction DT.Hour DT.Minute
@@ -57,9 +56,6 @@ derive instance Eq FullDateTime
 -- Parser helpers
 count :: forall s m a. Monad m => Int -> P.ParserT s m a -> P.ParserT s m (Array a)
 count n p = sequence $ Array.replicate n p
-
-digit :: forall m. Monad m => P.ParserT String m Char
-digit = PS.satisfy (isDecDigit <<< codePointFromChar)
 
 parseDigits :: forall m. Monad m => Int -> P.ParserT String m Int
 parseDigits n = do

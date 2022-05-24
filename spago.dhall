@@ -23,7 +23,7 @@ to generate this file without the comments in this block.
                  , "parsing"
                  , "prelude"
                  , "strings"
-                 , "unicode" ]
+                 ]
 , license = "BSD-3-Clause"
 , packages = ./packages.dhall
 , repository = "https://github.com/flounders/purescript-datetime-parsing"
