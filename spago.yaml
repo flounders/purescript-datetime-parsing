@@ -19,7 +19,6 @@ package:
     - parsing: ">=9.0.0 <12.0.0"
     - prelude: ">=6.0.0 <7.0.0"
     - strings: ">=6.0.0 <7.0.0"
-    - unicode: ">=6.0.0 <7.0.0"
   test:
     main: Test.Main
     dependencies:
